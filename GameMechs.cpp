@@ -19,11 +19,30 @@ GameMechs::GameMechs(int boardX, int boardY)
 
 // do you need a destructor?
 
+GameMechs::~GameMechs()
+{
+    
+}
 
 
 bool GameMechs::getExitFlagStatus()
 {
     return exitFlag;
+}
+
+bool GameMechs::getLoseFlagStatus()
+{
+    return loseFlag;
+}
+
+void GameMechs::setLoseFlag()
+{
+    loseFlag = true;
+}
+
+void GameMechs::setExitTrue()
+{
+    exitFlag = true;
 }
 
 char GameMechs::getInput()
@@ -45,20 +64,24 @@ int GameMechs::getBoardSizeY()
     return boardSizeY;
 }
 
-
-void GameMechs::setExitTrue()
-{
-
-}
-
 void GameMechs::setInput(char this_input)
 {
-
+    input = this_input;
 }
 
 void GameMechs::clearInput()
 {
+    input = 0;
+}
 
+int GameMechs::getScore()
+{
+    return score;
+}
+
+void GameMechs::incrementScore(int value)
+{
+    score += value;
 }
 
 
