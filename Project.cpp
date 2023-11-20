@@ -13,6 +13,8 @@ using namespace std;
 GameMechs* myGM;
 Player* myPlayer;
 
+objPos* playerPos; // I added this
+
 void Initialize(void);
 void GetInput(void);
 void RunLogic(void);
@@ -47,19 +49,26 @@ void Initialize(void)
 
     myGM = new GameMechs(30,15); // make the board size 20x10
     myPlayer = new Player(myGM);
-
+     
     
 }
 
 void GetInput(void)
 {
-   myGM->getInput();
+   
+   char userInput = myGM->getInput();
+   myGM->setInput(userInput);
+   
+
 }
 
 void RunLogic(void)
 {
+    
     myPlayer->updatePlayerDir();
-    if(myGM->getInput()=='/')
+    myPlayer->movePlayer();
+    
+    if(myGM->getInput() == '/')
     {
         myGM->setExitTrue();
     }
@@ -71,6 +80,7 @@ void DrawScreen(void)
     MacUILib_clearScreen();    
     objPos tempPos;
     objPos drawPos;
+    
     myPlayer->getPlayerPos(tempPos); // get the player pos
 
     for(int y = 0;y<15;y++)
@@ -87,7 +97,16 @@ void DrawScreen(void)
             {
                 // Draw space in the middle
                 drawPos.setObjPos(x,y,' ');
-                MacUILib_printf("%c",drawPos.getSymbol());
+                // If a character is here, don't print space
+                if(x == tempPos.x && y == tempPos.y)
+                {
+                    MacUILib_printf("%c", '*');
+                }
+                else
+                {
+                    MacUILib_printf("%c", drawPos.getSymbol());
+                }
+                
             }
         }
         MacUILib_printf("\n"); // Move to the next line after each row
