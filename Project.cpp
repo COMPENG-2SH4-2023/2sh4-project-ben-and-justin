@@ -3,9 +3,11 @@
 #include "objPos.h"
 #include "GameMechs.h"
 #include "Player.h"
+#include "objPosArrayList.h"
 #include "Food.h"
 #include <cstdlib>
 #include <time.h>
+
 
 
 
@@ -57,7 +59,8 @@ void Initialize(void)
     myPlayer = new Player(myGM);
     myFood = new Food(myGM);
 
-    myFood->generateFood(playerPos); // parameter is blockOff position so I put playerPos so that a food can't spawn on the player
+    objPos tempPos{-1, -1, 'o'};
+    myFood->generateFood(tempPos); // parameter is blockOff position so I put playerPos so that a food can't spawn on the player
      
     // Think about when to generate the new Food...
 
@@ -94,7 +97,7 @@ void DrawScreen(void) // drawscreen is allowed to be procedural programming for 
 
     bool drawn;
     
-    objPosArrayList* playerBody = getPlayerPos();
+    objPosArrayList* playerBody = myPlayer->getPlayerPos();
     objPos tempBody;
 
     objPos drawPos;
@@ -112,10 +115,10 @@ void DrawScreen(void) // drawscreen is allowed to be procedural programming for 
             // iterate through every element in the list
             for(int k = 0; k < playerBody->getSize(); k++)
             {
-                playerBody->getElement(tempBody,y);
+                playerBody->getElement(tempBody,k);
                 if(tempBody.x == x && tempBody.y == y)
                 {
-                    MacUILib_printf("c", tempBody.symbol);
+                    MacUILib_printf("%c", tempBody.symbol);
                     drawn = true;
                     break;
                 }
@@ -136,7 +139,7 @@ void DrawScreen(void) // drawscreen is allowed to be procedural programming for 
                 drawPos.setObjPos(x,y,' ');
                 // If a character is here, don't print space
                 
-                else if(x == tempFoodPos.x && y == tempFoodPos.y)
+                if(x == tempFoodPos.x && y == tempFoodPos.y)
                 {
                     MacUILib_printf("%c", tempFoodPos.getSymbol());
                 }
@@ -149,9 +152,18 @@ void DrawScreen(void) // drawscreen is allowed to be procedural programming for 
         MacUILib_printf("\n"); // Move to the next line after each row
     }
 
+    MacUILib_printf("Score: %d\n", myGM->getScore()); 
+    MacUILib_printf("Player Positions:\n");
+    for(int l = 0; l < playerBody->getSize(); l++)
+    {
+        playerBody->getElement(tempBody,l);
+        MacUILib_printf("<%d, %d>", tempBody.x,tempBody.y);
+    }
+    MacUILib_printf("\nFood Pos: <%d, %d>\n",
+                        tempFoodPos.x,tempFoodPos.y);
+    //MacUILib_printf("BoardSize: [%d-%d], Player Pos: <%d, %d> + %c\n", myGM->getBoardSizeX(),myGM->getBoardSizeY(),tempPos.x, tempPos.y,tempPos.symbol);
+    //MacUILib_printf("Food Pos: <%d, %d> + %c\n", tempFoodPos.x, tempFoodPos.y, tempFoodPos.getSymbol());
 
-    MacUILib_printf("BoardSize: %d%d, Player Pos: <%d, %d> + %c\n", myGM->getBoardSizeX(),myGM->getBoardSizeY(),tempPos.x, tempPos.y,tempPos.symbol);
-    MacUILib_printf("Food Pos: <%d, %d> + %c\n", tempFoodPos.x, tempFoodPos.y, tempFoodPos.getSymbol());
 }
 
 void LoopDelay(void)

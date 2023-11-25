@@ -14,8 +14,13 @@ Player::Player(GameMechs* thisGMRef)
                       '*');
 
     playerPosList = new objPosArrayList();
-    playerPosList.insertHead(tempPos);
+    playerPosList->insertHead(tempPos);
 
+    // for debugging purpose - insert another 4 segments
+    playerPosList->insertHead(tempPos);
+    playerPosList->insertHead(tempPos);
+    playerPosList->insertHead(tempPos);
+    playerPosList->insertHead(tempPos);
 }
 
 
@@ -63,8 +68,8 @@ void Player::movePlayer()
     // PPA3 Finite State Machine logic
     
 
-    objPos currHead; // holding the pos information of the current head
-    playerPosList.getHeadElement(currHead);
+    objPos currentHead; // holding the pos information of the current head
+    playerPosList->getHeadElement(currentHead);
 
     switch(myDir)
     {
@@ -95,7 +100,7 @@ void Player::movePlayer()
     }
 
     // new current head should be inserted to the head of the list
-    playerPosList->insertHead(currHead);
+    playerPosList->insertHead(currentHead);
 
     // then, remove tail
     playerPosList->removeTail();
