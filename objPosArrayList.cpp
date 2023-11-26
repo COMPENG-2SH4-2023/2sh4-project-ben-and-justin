@@ -19,7 +19,7 @@ objPosArrayList::~objPosArrayList()
     delete[] aList;
 }
 
-int objPosArrayList::getSize()
+int objPosArrayList::getSize() const
 {
     return listSize;
 }
@@ -77,17 +77,17 @@ void objPosArrayList::removeTail()
     listSize--; // lazy delete
 }
 
-void objPosArrayList::getHeadElement(objPos &returnPos)
+void objPosArrayList::getHeadElement(objPos &returnPos) const
 {
     returnPos.setObjPos(aList[0]);
 }
 
-void objPosArrayList::getTailElement(objPos &returnPos)
+void objPosArrayList::getTailElement(objPos &returnPos) const
 {
     returnPos.setObjPos(aList[listSize - 1]);
 }
 
-void objPosArrayList::getElement(objPos &returnPos, int index)
+void objPosArrayList::getElement(objPos &returnPos, int index) const
 {
     if(listSize == 0 || index < 0 || index >= listSize)
     {

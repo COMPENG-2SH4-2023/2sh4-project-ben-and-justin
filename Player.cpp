@@ -1,9 +1,10 @@
 #include "Player.h"
+#include <iostream>
 
 
-Player::Player(GameMechs* thisGMRef)
+Player::Player(GameMechs* thisGMRef, Food *foodRef) : mainGameMechsRef(thisGMRef), myFood(foodRef)
 {
-    mainGameMechsRef = thisGMRef;
+    
     myDir = STOP;
 
     // more actions to be included
@@ -15,12 +16,10 @@ Player::Player(GameMechs* thisGMRef)
 
     playerPosList = new objPosArrayList();
     playerPosList->insertHead(tempPos);
+    
 
-    // for debugging purpose - insert another 4 segments
-    playerPosList->insertHead(tempPos);
-    playerPosList->insertHead(tempPos);
-    playerPosList->insertHead(tempPos);
-    playerPosList->insertHead(tempPos);
+    // Initialize playerPos with the new head position
+    playerPos = tempPos;
 }
 
 
@@ -67,7 +66,6 @@ void Player::movePlayer()
 {
     // PPA3 Finite State Machine logic
     
-
     objPos currentHead; // holding the pos information of the current head
     playerPosList->getHeadElement(currentHead);
 
@@ -80,7 +78,7 @@ void Player::movePlayer()
             break;
         case DOWN:
             currentHead.y++;
-            if(currentHead.y >= mainGameMechsRef->getBoardSizeY()) // Wraparound from bottom to top
+            if(currentHead.y >= mainGameMechsRef->getBoardSizeY() -1) // Wraparound from bottom to top
                 currentHead.y = 1;
             break;
         case LEFT:
@@ -90,19 +88,82 @@ void Player::movePlayer()
             break;
         case RIGHT:
             currentHead.x++;
-            if (currentHead.x >= mainGameMechsRef->getBoardSizeX()) // Wraparound from right to left
+            if (currentHead.x >= mainGameMechsRef->getBoardSizeX() -1) // Wraparound from right to left
                 currentHead.x = 1;
+            
             break;
 
         case STOP:
         default:
             break;
     }
+    // Update playerPos to reflect the new head position
+    playerPos = currentHead;
 
-    // new current head should be inserted to the head of the list
-    playerPosList->insertHead(currentHead);
+    // Insert the new head position to the playerPosList
+    // playerPosList->insertHead(playerPos);
 
-    // then, remove tail
-    playerPosList->removeTail();
+    // playerPosList->removeTail();
+    
+
+    if(!checkFoodConsumption()) 
+    {
+        // Normal movement when there's no food consumption
+        playerPosList->insertHead(currentHead);
+        playerPosList->removeTail();
+    }
 }
 
+bool Player::checkFoodConsumption()
+{
+
+    // Check if the head overlaps with the food
+    objPos foodPos;
+    myFood->getFoodPos(foodPos);
+
+    if(playerPos.isPosEqual(&foodPos))
+    {
+        
+
+        // Generate new food
+        myFood->generateFood(playerPos, playerPosList);
+
+        // Increase the score in GM
+        mainGameMechsRef->incrementScore();
+        
+        increasePlayerLength();
+
+        return true; // Food consumed successfully
+    }
+
+    
+    return false; // No food consumption
+}
+
+void Player::increasePlayerLength()
+{
+    
+    // Get the current head position
+    objPos currentHead;
+    playerPosList->getHeadElement(currentHead);
+
+    // Insert the new head position to the playerPosList
+    playerPosList->insertHead(currentHead);
+}
+
+bool Player::checkSelfCollision()
+{
+    // Check if the new head position collides with any element in the playerPosList
+    objPos tempPos;
+
+    for(int i = 1; i < playerPosList->getSize();i++)
+    {
+        playerPosList->getElement(tempPos,i);
+        if(tempPos.isPosEqual(&playerPos))
+        {
+            return true; // Collision detected
+        }
+    }
+
+    return false; // No collision
+}

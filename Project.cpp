@@ -56,11 +56,12 @@ void Initialize(void)
     srand((unsigned)time(NULL));
 
     myGM = new GameMechs(30,15); // make the board size 20x10
-    myPlayer = new Player(myGM);
     myFood = new Food(myGM);
+    myPlayer = new Player(myGM, myFood);
+    
 
     objPos tempPos{-1, -1, 'o'};
-    myFood->generateFood(tempPos); // parameter is blockOff position so I put playerPos so that a food can't spawn on the player
+    myFood->generateFood(tempPos,myPlayer->getPlayerPos()); // parameter is blockOff position so I put playerPos so that a food can't spawn on the player
      
     // Think about when to generate the new Food...
 
@@ -76,8 +77,10 @@ void GetInput(void)
    
    myGM->getInput();
    
-   
-
+   if(myGM->getLoseFlagStatus())
+   {
+    MacUILib_printf("Game Over: You Lose!");
+   }
 }
 
 void RunLogic(void)
@@ -85,9 +88,26 @@ void RunLogic(void)
     
     myPlayer->updatePlayerDir();
     myPlayer->movePlayer();
+
     
-    myGM->clearInput();
+    // Check for food consumption
+    
+     myPlayer->checkFoodConsumption();
    
+
+    // Check for self collision
+    
+    if(myPlayer->checkSelfCollision())
+    {
+        // Handle the case when the player collides with itself
+        
+        myGM->setLoseFlag();
+        myGM->setExitTrue();
+        
+    }
+    
+    // Clear input for next loop/iteration/frame
+    myGM->clearInput();
     
 }
 
@@ -174,14 +194,17 @@ void LoopDelay(void)
 
 void CleanUp(void)
 {
-    MacUILib_clearScreen();    
-  
+    MacUILib_clearScreen(); 
+
+    
+
     MacUILib_uninit();
 
-    delete myGM;
     
-    delete myPlayer;
 
     delete myFood;
+
+    delete myPlayer;
     
+    delete myGM;
 }

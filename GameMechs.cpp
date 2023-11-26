@@ -7,6 +7,8 @@ GameMechs::GameMechs()
     exitFlag = false;
     boardSizeX = 20;    // default board size
     boardSizeY = 10;
+    score = 0;
+    loseFlag = false;
 }
 
 GameMechs::GameMechs(int boardX, int boardY)
@@ -15,6 +17,8 @@ GameMechs::GameMechs(int boardX, int boardY)
     exitFlag = false;
     boardSizeX = boardX;    
     boardSizeY = boardY;
+    score = 0;
+    loseFlag = false;
 }
 
 // do you need a destructor?
@@ -54,6 +58,7 @@ char GameMechs::getInput()
     if(input == 27)
     {
         exitFlag = true;
+        
     }
     else if(input == 0)
     {
@@ -88,9 +93,9 @@ int GameMechs::getScore()
     return score;
 }
 
-void GameMechs::incrementScore(int value)
+void GameMechs::incrementScore()
 {
-    score += value;
+    score++;
 }
 
 
