@@ -101,17 +101,23 @@ void Player::movePlayer()
     playerPos = currentHead;
 
     // Insert the new head position to the playerPosList
-    // playerPosList->insertHead(playerPos);
+   
+   if(checkFoodConsumption())
+   {
+    mainGameMechsRef->incrementScore();
 
-    // playerPosList->removeTail();
+    myFood->generateFood(playerPos, playerPosList);
+
+    playerPosList->insertHead(currentHead);
+   }
+   else
+   {
+    playerPosList->insertHead(currentHead);
+    playerPosList->removeTail();
+   }
     
 
-    if(!checkFoodConsumption()) 
-    {
-        // Normal movement when there's no food consumption
-        playerPosList->insertHead(currentHead);
-        playerPosList->removeTail();
-    }
+    
 }
 
 bool Player::checkFoodConsumption()
@@ -123,16 +129,6 @@ bool Player::checkFoodConsumption()
 
     if(playerPos.isPosEqual(&foodPos))
     {
-        
-
-        // Generate new food
-        myFood->generateFood(playerPos, playerPosList);
-
-        // Increase the score in GM
-        mainGameMechsRef->incrementScore();
-        
-        increasePlayerLength();
-
         return true; // Food consumed successfully
     }
 
@@ -145,10 +141,10 @@ void Player::increasePlayerLength()
     
     // Get the current head position
     objPos currentHead;
-    playerPosList->getHeadElement(currentHead);
 
-    // Insert the new head position to the playerPosList
+    playerPosList->getHeadElement(currentHead);
     playerPosList->insertHead(currentHead);
+    
 }
 
 bool Player::checkSelfCollision()
