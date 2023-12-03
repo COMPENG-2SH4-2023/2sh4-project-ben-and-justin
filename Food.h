@@ -12,7 +12,6 @@ using namespace std;
 
 class Food
 {
-
     private:
         objPos foodPos;
         objPosArrayList* foodBucket;
@@ -25,7 +24,6 @@ class Food
         // Need to accept the player body array list
         // go through each array list element to make sure they are all
         // blocked off from random food generation
-
 
         void getFoodPos(objPos &returnPos);
         objPosArrayList* getFoodBucket();

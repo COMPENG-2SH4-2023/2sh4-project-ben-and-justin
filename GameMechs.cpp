@@ -21,13 +21,10 @@ GameMechs::GameMechs(int boardX, int boardY)
     loseFlag = false;
 }
 
-// do you need a destructor?
-
 GameMechs::~GameMechs()
 {
     
 }
-
 
 bool GameMechs::getExitFlagStatus()
 {
@@ -57,15 +54,13 @@ char GameMechs::getInput()
     }
     if(input == 27)
     {
-        exitFlag = true;
-        
+        exitFlag = true; 
     }
     else if(input == 0)
     {
         return '\0';
     }
     return input;
-
 }
 
 int GameMechs::getBoardSizeX()

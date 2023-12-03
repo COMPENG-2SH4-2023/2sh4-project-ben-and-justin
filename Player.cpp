@@ -7,8 +7,6 @@ Player::Player(GameMechs* thisGMRef, Food *foodRef) : mainGameMechsRef(thisGMRef
     
     myDir = STOP;
 
-    // more actions to be included
-
     objPos tempPos;
     tempPos.setObjPos(mainGameMechsRef->getBoardSizeX()/2,
                       mainGameMechsRef->getBoardSizeY()/2,
@@ -17,7 +15,6 @@ Player::Player(GameMechs* thisGMRef, Food *foodRef) : mainGameMechsRef(thisGMRef
     playerPosList = new objPosArrayList();
     playerPosList->insertHead(tempPos);
     
-
     // Initialize playerPos with the new head position
     playerPos = tempPos;
 }
@@ -38,24 +35,27 @@ objPosArrayList* Player::getPlayerPos()
 void Player::updatePlayerDir()
 {
     // PPA3 input processing logic 
-
     char input = mainGameMechsRef->getInput();
 
     switch(input)
     {
         case 'w': //UP
+        case 'W':
             if(myDir != UP && myDir != DOWN)
                 myDir = UP;
             break;
         case 'a': //LEFT
+        case 'A':
             if(myDir != LEFT && myDir != RIGHT)
                 myDir = LEFT;
             break;
         case 's': //DOWN
+        case 'S':
             if(myDir != UP && myDir != DOWN)
                 myDir = DOWN;
             break;
         case 'd': //RIGHT
+        case 'D':
             if(myDir != LEFT && myDir != RIGHT)
                 myDir = RIGHT;
             break;
@@ -100,8 +100,6 @@ void Player::movePlayer()
     // Update playerPos to reflect the new head position
     playerPos = currentHead;
 
-    // Insert the new head position to the playerPosList
-
     // Food Consumption Behaviour
     char typeConsumed = checkFoodConsumption();
     if(typeConsumed != ' ') {
@@ -115,7 +113,6 @@ void Player::movePlayer()
             // Length Food
             mainGameMechsRef->incrementScore(5);
             playerPosList->insertHead(currentHead);
-
             playerPosList->addSize(9);
         }
         else if(typeConsumed == '+') {
@@ -124,9 +121,11 @@ void Player::movePlayer()
             playerPosList->insertHead(currentHead);
             playerPosList->removeTail();
         }
+        // Always generate food after consumption
         myFood->generateFood(playerPos, playerPosList);
     }
     else {
+        // Default movement 
         playerPosList->insertHead(currentHead);
         playerPosList->removeTail();
     }
@@ -152,7 +151,6 @@ char Player::checkFoodConsumption()
 
 void Player::increasePlayerLength()
 {
-    
     // Get the current head position
     objPos currentHead;
 

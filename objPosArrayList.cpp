@@ -1,11 +1,6 @@
 #include "objPosArrayList.h"
 
-// Paste your CUTE Tested implementation here.
-// Paste your CUTE Tested implementation here.
-// Paste your CUTE Tested implementation here.
 
-// Check lecture contents on general purpose array list construction, 
-// and modify it to support objPos array list construction.
 
 objPosArrayList::objPosArrayList()
 {
@@ -26,9 +21,7 @@ int objPosArrayList::getSize() const
 
 void objPosArrayList::insertHead(objPos thisPos)
 {
-    // still need error check - what if listSize is at capacity?
     // check if listSize is equal to arrayCapacity. If yes, at capacity, don't insert.
-
     if(listSize == arrayCapacity)
     {
         return; // List is full, no insertion allowed

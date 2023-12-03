@@ -21,28 +21,8 @@ Food::~Food()
 
 void Food::generateFood(objPos blockOff, const objPosArrayList* playerBody)
 {
-    
-    // generate random x and y coord, and make sure they are NOT boarder or blockOff pos.
-    
-    // check x and y against 0 and boardSizeX / Y.
-
-    // remember, in objPos class you have an isPosEqual() method. Use this instead of comparing element-by-element
-    // for your convenience
-
-    // Bonus Rambling
-    // Generate 5 food, with 1 or 2 specials
-        // Score 10 w length += 0
-        // Score 5 w length += 10
-    // Solution
-        // Initialize foodBucket in constructor, add deconstructor for memory leaks - Done
-        // Repeat coordinate generation for 5 objects here (PPA3 GenerateFood) - Done
-        // RNG after valid coordinates to assign specials, only two specials assigned - Done
-    
-        // In Player>movePlayer>checkConsumption, check foodBucket->getElement->getSymbol, act accordingly - Done
-        // Update DrawScreen to accomodate foodBucket - Done
-
     // Generate 5 food objects
-    int i,j,k;
+    int i,j;
     for(i=0 ; i<5 ; i++) {
         bool blocked;
         int randomX, randomY;
@@ -51,7 +31,7 @@ void Food::generateFood(objPos blockOff, const objPosArrayList* playerBody)
 
         // Loop for validity
         do {
-            // Assign random coordinates
+            // Assign and Set random coordinates
             randomX = 1 + rand() % (mainGameMechsRef->getBoardSizeX() - 2);
             randomY = 1 + rand() % (mainGameMechsRef->getBoardSizeY() - 2);
             tempFoodPos.setObjPos(randomX, randomY, 'X');
@@ -81,6 +61,7 @@ void Food::generateFood(objPos blockOff, const objPosArrayList* playerBody)
 
         // Clear bad data placeholders
         foodBucket->removeTail();
+        
         // Insert valid food into foodBucket
         if(i < 3) {
             // Insert regular foods for first three entries

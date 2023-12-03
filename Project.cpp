@@ -10,7 +10,6 @@
 
 
 
-
 using namespace std;
 
 #define DELAY_CONST 100000
@@ -55,7 +54,7 @@ void Initialize(void)
 
     srand((unsigned)time(NULL));
 
-    myGM = new GameMechs(30,15); // make the board size 20x10
+    myGM = new GameMechs(30,15); // make the board size 30x15
     myFood = new Food(myGM);
     myPlayer = new Player(myGM, myFood);
     
@@ -107,8 +106,6 @@ void DrawScreen(void) // drawscreen is allowed to be procedural programming for 
 
     objPos drawPos;
     objPos tempFoodPos;
-    
-    // myFood->getFoodPos(tempFoodPos); // get the food pos
 
     for(int y = 0;y < myGM->getBoardSizeY(); y++)
     {
@@ -151,7 +148,7 @@ void DrawScreen(void) // drawscreen is allowed to be procedural programming for 
                         break;
                     }
                 }
-                // If a character is here, don't print space
+                // If food is here, don't print space
                 if (foodDrawn) continue;
                 
                 // Whitespace Printing
@@ -162,23 +159,8 @@ void DrawScreen(void) // drawscreen is allowed to be procedural programming for 
         MacUILib_printf("\n"); // Move to the next line after each row
     }
 
-    MacUILib_printf("Score: %d\n", myGM->getScore()); 
-    // MacUILib_printf("Player Positions:\n");
-    // for(int l = 0; l < playerBody->getSize(); l++)
-    // {
-    //     playerBody->getElement(tempBody,l);
-    //     MacUILib_printf("<%d, %d>", tempBody.x,tempBody.y);
-    // }
-    for(int i=0 ; i<5 ; i++) {
-        objPosArrayList* foodBucket = myFood->getFoodBucket();
-        objPos tempPos;
-        foodBucket->getElement(tempPos, i);
-        MacUILib_printf("\n");
-        MacUILib_printf("Food #%d: <%d,%d>", i+1, tempPos.x, tempPos.y);
-    }
-    MacUILib_printf("\nFood Pos: <%d, %d>\n",tempFoodPos.x,tempFoodPos.y);
-    
-
+    // Score Print Out
+    MacUILib_printf("Score: %d\n", myGM->getScore());   
 }
 
 void LoopDelay(void)
