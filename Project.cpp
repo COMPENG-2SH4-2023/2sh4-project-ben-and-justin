@@ -172,7 +172,16 @@ void LoopDelay(void)
 void CleanUp(void)
 {
     MacUILib_clearScreen(); 
-    MacUILib_printf("Game Ended. You Scored: %d Points!\n",myGM->getScore());
+
+    // Seperate end messages
+    bool endType = myGM->getLoseFlagStatus();
+    if(endType) {
+        MacUILib_printf("Game Ended. You Scored: %d Points!\n",myGM->getScore());
+    }
+    else {
+        MacUILib_printf("Game Quit. You Scored: %d Points!\n",myGM->getScore());
+    }
+    
 
     MacUILib_uninit();
 
