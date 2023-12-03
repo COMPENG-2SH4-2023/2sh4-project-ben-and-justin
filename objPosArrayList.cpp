@@ -51,7 +51,7 @@ void objPosArrayList::insertTail(objPos thisPos)
         return; // List is full, no insertion is allowed
     }
 
-    aList[listSize++].setObjPos(thisPos);
+    aList[listSize].setObjPos(thisPos);
 }
 
 void objPosArrayList::removeHead()
@@ -95,4 +95,8 @@ void objPosArrayList::getElement(objPos &returnPos, int index) const
     }
 
     returnPos = aList[index];
+}
+
+void objPosArrayList::addSize(int addition) {
+    listSize += addition;
 }

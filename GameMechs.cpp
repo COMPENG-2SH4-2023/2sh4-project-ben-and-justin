@@ -93,9 +93,9 @@ int GameMechs::getScore()
     return score;
 }
 
-void GameMechs::incrementScore()
+void GameMechs::incrementScore(int points)
 {
-    score++;
+    score += points;
 }
 
 

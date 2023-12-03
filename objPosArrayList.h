@@ -25,6 +25,9 @@ class objPosArrayList
         void getHeadElement(objPos &returnPos) const;
         void getTailElement(objPos &returnPos) const;
         void getElement(objPos &returnPos, int index) const;
+
+        // Bonus
+        void addSize(int addition);
 };
 
 #endif

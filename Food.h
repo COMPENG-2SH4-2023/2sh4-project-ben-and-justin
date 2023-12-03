@@ -28,6 +28,7 @@ class Food
 
 
         void getFoodPos(objPos &returnPos);
+        objPosArrayList* getFoodBucket();
         
 
 };

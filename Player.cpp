@@ -101,39 +101,53 @@ void Player::movePlayer()
     playerPos = currentHead;
 
     // Insert the new head position to the playerPosList
-   
-   if(checkFoodConsumption())
-   {
-    mainGameMechsRef->incrementScore();
 
-    myFood->generateFood(playerPos, playerPosList);
+    // Food Consumption Behaviour
+    char typeConsumed = checkFoodConsumption();
+    if(typeConsumed != ' ') {
+        // Check which food was consumed
+        if(typeConsumed == 'o') {
+            // Regular Behaviour
+            mainGameMechsRef->incrementScore(1);
+            playerPosList->insertHead(currentHead);
+        }
+        else if(typeConsumed == '@') {
+            // Length Food
+            mainGameMechsRef->incrementScore(5);
+            playerPosList->insertHead(currentHead);
 
-    playerPosList->insertHead(currentHead);
-   }
-   else
-   {
-    playerPosList->insertHead(currentHead);
-    playerPosList->removeTail();
-   }
-    
-
-    
+            playerPosList->addSize(9);
+        }
+        else if(typeConsumed == '+') {
+            // Score Food
+            mainGameMechsRef->incrementScore(10);
+            playerPosList->insertHead(currentHead);
+            playerPosList->removeTail();
+        }
+        myFood->generateFood(playerPos, playerPosList);
+    }
+    else {
+        playerPosList->insertHead(currentHead);
+        playerPosList->removeTail();
+    }
 }
 
-bool Player::checkFoodConsumption()
+char Player::checkFoodConsumption()
 {
-
+    int i;
+    char type = ' ';
     // Check if the head overlaps with the food
-    objPos foodPos;
-    myFood->getFoodPos(foodPos);
-
-    if(playerPos.isPosEqual(&foodPos))
-    {
-        return true; // Food consumed successfully
+    for(i=0 ; i<5 ; i++) {
+        objPos foodPos;
+        objPosArrayList* foodBucket = myFood->getFoodBucket();
+        foodBucket->getElement(foodPos, i);
+        if(playerPos.isPosEqual(&foodPos)) {
+            type = foodPos.getSymbol();
+        }
     }
 
-    
-    return false; // No food consumption
+    // Return type of food consumed, ' ', 'o', '@', '+'
+    return type; 
 }
 
 void Player::increasePlayerLength()

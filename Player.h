@@ -24,7 +24,7 @@ class Player
         void updatePlayerDir();
         void movePlayer();
 
-        bool checkFoodConsumption();
+        char checkFoodConsumption();
         void increasePlayerLength();
         bool checkSelfCollision();
         // Need more actions in here:

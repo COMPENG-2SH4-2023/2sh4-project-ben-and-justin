@@ -59,7 +59,6 @@ void Initialize(void)
     myFood = new Food(myGM);
     myPlayer = new Player(myGM, myFood);
     
-
     objPos tempPos{-1, -1, 'o'};
     myFood->generateFood(tempPos,myPlayer->getPlayerPos()); // parameter is blockOff position so I put playerPos so that a food can't spawn on the player
      
@@ -81,13 +80,8 @@ void RunLogic(void)
 {
     
     myPlayer->updatePlayerDir();
-
-    
     myPlayer->checkFoodConsumption();
-
     myPlayer->movePlayer();
-    
-    
    
     // Check for self collision
     if(myPlayer->checkSelfCollision())
@@ -105,7 +99,8 @@ void DrawScreen(void) // drawscreen is allowed to be procedural programming for 
 {
     MacUILib_clearScreen();
 
-    bool drawn;
+    bool bodyDrawn;
+    bool foodDrawn;
     
     objPosArrayList* playerBody = myPlayer->getPlayerPos();
     objPos tempBody;
@@ -113,13 +108,14 @@ void DrawScreen(void) // drawscreen is allowed to be procedural programming for 
     objPos drawPos;
     objPos tempFoodPos;
     
-    myFood->getFoodPos(tempFoodPos); // get the food pos
+    // myFood->getFoodPos(tempFoodPos); // get the food pos
 
     for(int y = 0;y < myGM->getBoardSizeY(); y++)
     {
         for(int x = 0; x < myGM->getBoardSizeX(); x++)
         {
-            drawn = false;
+            bodyDrawn = false;
+            foodDrawn = false;
 
             // iterate through every element in the list
             for(int k = 0; k < playerBody->getSize(); k++)
@@ -128,12 +124,12 @@ void DrawScreen(void) // drawscreen is allowed to be procedural programming for 
                 if(tempBody.x == x && tempBody.y == y)
                 {
                     MacUILib_printf("%c", tempBody.symbol);
-                    drawn = true;
+                    bodyDrawn = true;
                     break;
                 }
             }
 
-            if(drawn) continue;
+            if(bodyDrawn) continue;
             // if player body was drawn, don't draw anything below.
 
             if(y==0 || y == myGM->getBoardSizeY() - 1 || x==0 || x== myGM->getBoardSizeX() -1)
@@ -144,18 +140,23 @@ void DrawScreen(void) // drawscreen is allowed to be procedural programming for 
             }
             else
             {
-                // Draw space in the middle
-                drawPos.setObjPos(x,y,' ');
-                // If a character is here, don't print space
                 
-                if(x == tempFoodPos.x && y == tempFoodPos.y)
-                {
-                    MacUILib_printf("%c", tempFoodPos.getSymbol());
+                // Food Printing
+                for(int i=0 ; i<5 ; i++) {
+                    objPosArrayList* foodBucket = myFood->getFoodBucket();
+                    foodBucket->getElement(tempFoodPos, i);
+                    if(tempFoodPos.x == x && tempFoodPos.y == y) {
+                        MacUILib_printf("%c", tempFoodPos.getSymbol());
+                        foodDrawn = true;
+                        break;
+                    }
                 }
-                else
-                {
-                    MacUILib_printf("%c", drawPos.getSymbol());
-                }
+                // If a character is here, don't print space
+                if (foodDrawn) continue;
+                
+                // Whitespace Printing
+                drawPos.setObjPos(x,y,' ');
+                MacUILib_printf("%c", drawPos.getSymbol());
             }
         }
         MacUILib_printf("\n"); // Move to the next line after each row
@@ -168,8 +169,14 @@ void DrawScreen(void) // drawscreen is allowed to be procedural programming for 
     //     playerBody->getElement(tempBody,l);
     //     MacUILib_printf("<%d, %d>", tempBody.x,tempBody.y);
     // }
-    MacUILib_printf("\nFood Pos: <%d, %d>\n",
-                        tempFoodPos.x,tempFoodPos.y);
+    for(int i=0 ; i<5 ; i++) {
+        objPosArrayList* foodBucket = myFood->getFoodBucket();
+        objPos tempPos;
+        foodBucket->getElement(tempPos, i);
+        MacUILib_printf("\n");
+        MacUILib_printf("Food #%d: <%d,%d>", i+1, tempPos.x, tempPos.y);
+    }
+    MacUILib_printf("\nFood Pos: <%d, %d>\n",tempFoodPos.x,tempFoodPos.y);
     
 
 }
@@ -184,15 +191,10 @@ void CleanUp(void)
 {
     MacUILib_clearScreen(); 
     MacUILib_printf("Game Ended. You Scored: %d Points!\n",myGM->getScore());
-    
 
     MacUILib_uninit();
 
-    
-
     delete myFood;
-
     delete myPlayer;
-    
     delete myGM;
 }
